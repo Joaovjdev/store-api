@@ -1,8 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import { database } from './config/database.js';
-import { userRoutes } from './routes/user.routes.js';
+import { authRoutes } from './routes/auth.routes.js';
+import { prisma } from './config/database.js';
 
 
 dotenv.config();
@@ -13,17 +13,18 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-app.use('/api/users', userRoutes);
+app.use('/api/auth', authRoutes);
 
 const startServer = async () => {
-    try {
-        await database.sync();
-        console.log('Database synced successfully');
+   try {
+        await prisma.$connect();
+        console.log('Connected to the database');
         app.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`);
         });
-    } catch (error) {
-        console.error('Error starting server:', error);
-
-    }
+   } catch (error) {
+        console.error('Error connecting to the database', error);
+   }
 }
+
+startServer();
