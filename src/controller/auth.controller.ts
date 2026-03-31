@@ -13,10 +13,8 @@ export class AuthController {
         try {
             const { email, username, password } = req.body;
 
-            if (!email || !username || !password) {
-                return res.status(400).json({ message: 'Email, username and password are required' });
-            }
             const result = await this.authService.register(email, username, password);
+            
             return res.status(201).json(result);
         } catch (error) {
             return res.status(500).json({ message: 'Error registering user', error });
